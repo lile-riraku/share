@@ -1,0 +1,11 @@
+### environment modules ###
+
+export MODULEPATH="$(dirname "${BASH_SOURCE[0]}")"/../environmental-modules/profile
+module() {
+    eval "$(modulecmd sh "$@")"
+}
+
+# module load gcc
+# module load jdk
+# module load apache-tomcat
+# module load apache-ant
