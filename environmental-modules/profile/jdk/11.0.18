@@ -1,0 +1,20 @@
+#%Module
+
+proc ModulesHelp { } {
+       global version modroot
+       puts stderr "\n\tThis adds $modroot/* to several of the"
+       puts stderr "\tenvironment variables."
+       puts stderr "\n\tVersion $version\n"
+}
+
+module-whatis    "loads the jdk 11.0.18 environment."
+
+conflict jdk
+
+# for Tcl script use only
+set    version        11.0.18
+set    modroot        /Library/Java/JavaVirtualMachines/jdk-11.jdk/Contents/Home
+
+setenv        JAVA_HOME    $modroot
+prepend-path    PATH           $modroot/bin
+prepend-path    MANPATH        $modroot/man

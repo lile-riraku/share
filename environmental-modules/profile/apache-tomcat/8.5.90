@@ -1,0 +1,16 @@
+#%Module
+
+proc ModulesHelp { } {
+       global version modroot
+       puts stderr "\n\tThis adds $modroot/* to several of the"
+       puts stderr "\tenvironment variables."
+       puts stderr "\n\tVersion $version\n"
+}
+
+# for Tcl script use only
+set    version        8.5.90
+set    modroot        /Users/jp31251/impo/soft/apache-tomcat-8.5.90
+
+setenv        CATALINA_HOME    $modroot
+prepend-path    PATH           $modroot/bin
+prepend-path    CLASSPATH      $modroot/lib
