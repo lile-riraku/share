@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+set -u
+
+INTERVAL="${1:-60}"
+
+# ANSI colors
+RESET='\033[0m'
+BOLD='\033[1m'
+DIM='\033[2m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+RED='\033[31m'
+CYAN='\033[36m'
+WHITE='\033[37m'
+
+running=true
+force_refresh=true
+
+cleanup() {
+    # Show cursor and restore terminal state.
+    printf '\033[?25h'
+    stty echo icanon 2>/dev/null || true
+    printf '\n'
+}
+
+quit() {
+    running=false
+}
+
+trap quit INT TERM
+trap cleanup EXIT
+
+# Hide cursor.
+printf '\033[?25l'
+
+# Read one character immediately without echo.
+stty -echo -icanon time 0 min 0 2>/dev/null || true
+
+render() {
+    local output
+    local status
+    local total=0
+    local attached=0
+    local detached=0
+    local exited=0
+
+    output="$(zellij list-sessions --no-formatting 2>&1)"
+    status=$?
+
+    clear
+
+    printf "${BOLD}${CYAN}Zellij Sessions${RESET}\n"
+    printf "${DIM}Updated: %s    Refresh: %ss${RESET}\n" \
+        "$(date '+%Y-%m-%d %H:%M:%S')" \
+        "$INTERVAL"
+
+    printf '%*s\n' 72 '' | tr ' ' '-'
+
+    if [[ $status -ne 0 ]]; then
+        printf "${RED}Failed to list sessions:${RESET}\n"
+        printf '%s\n' "$output"
+        return
+    fi
+
+    if [[ -z "$output" ]] || grep -qi "no active zellij sessions" <<< "$output"; then
+        printf "${DIM}No Zellij sessions found.${RESET}\n"
+        printf '\n'
+        printf "${DIM}Create one with:${RESET}\n"
+        printf '  zellij attach --create work\n'
+        return
+    fi
+
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+
+        total=$((total + 1))
+
+        case "$line" in
+            *EXITED*|*exited*)
+                exited=$((exited + 1))
+                printf "${RED}●${RESET} %s\n" "$line"
+                ;;
+            *current*|*CURRENT*|*connected*|*CONNECTED*|*attached*|*ATTACHED*)
+                attached=$((attached + 1))
+                printf "${GREEN}●${RESET} %s\n" "$line"
+                ;;
+            *)
+                if [[ "$line" =~ (^|[^0-9])([1-9][0-9]*)[[:space:]]+([Uu]sers?|[Cc]lients?)([^[:alpha:]]|$) ]] ||
+                    [[ "$line" =~ ([Uu]sers?|[Cc]lients?)[[:space:]]*:[[:space:]]*[1-9][0-9]*([^0-9]|$) ]]; then
+                    attached=$((attached + 1))
+                    printf "${GREEN}●${RESET} %s\n" "$line"
+                else
+                    detached=$((detached + 1))
+                    printf "${YELLOW}●${RESET} %s\n" "$line"
+                fi
+                ;;
+        esac
+    done <<< "$output"
+
+    printf '\n'
+    printf '%*s\n' 72 '' | tr ' ' '-'
+    printf "${WHITE}Total:${RESET} %d   " "$total"
+    printf "${GREEN}Attached:${RESET} %d   " "$attached"
+    printf "${YELLOW}Detached:${RESET} %d   " "$detached"
+    printf "${RED}Exited:${RESET} %d\n" "$exited"
+
+    printf '\n'
+    printf "${BOLD}q${RESET} Quit   "
+    printf "${BOLD}r${RESET} Refresh   "
+    printf "${BOLD}Ctrl+C${RESET} Quit\n"
+}
+
+while $running; do
+    if $force_refresh; then
+        render
+        force_refresh=false
+    fi
+
+    key=""
+    IFS= read -r -n 1 -t "$INTERVAL" key || true
+
+    case "$key" in
+        q|Q)
+            running=false
+            ;;
+        r|R)
+            force_refresh=true
+            ;;
+        "")
+            force_refresh=true
+            ;;
+    esac
+done
