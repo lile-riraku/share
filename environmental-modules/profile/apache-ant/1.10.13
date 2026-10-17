@@ -1,0 +1,17 @@
+#%Module
+
+proc ModulesHelp { } {
+       global version modroot
+       puts stderr "\n\tThis adds $modroot/* to several of the"
+       puts stderr "\tenvironment variables."
+       puts stderr "\n\tVersion $version\n"
+}
+
+# for Tcl script use only
+set    version        1.10.13
+set    modroot        $/apache-ant-1.10.13
+
+setenv        ANT_HOME    $modroot
+prepend-path    PATH           $modroot/bin
+prepend-path    CLASSPATH      $modroot/lib
+prepend-path    MANPATH        $modroot/manual
