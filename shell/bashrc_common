@@ -1,0 +1,53 @@
+FILE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [ -f /etc/bashrc ]; then
+    source /etc/bashrc
+fi
+
+### Prompt ###
+PS1='[\h:\W] '
+
+### Directory ###
+export WORK=~
+export SOFT=$WORK/soft
+export INSTALL=$WORK/install
+
+### Alias ###
+alias cdw='cd $WORK'
+alias beep="osascript -e 'beep'"
+alias ls='ls --color=auto'
+alias ll='ls -l --color=auto'
+alias grep='grep --color=auto'
+alias gita='git add '
+alias gitb='git branch '
+alias gitc='git checkout '
+alias gitcm='git commit '
+alias gitcp='git cherry-pick '
+alias gitd='git diff '
+alias gitf='git fetch '
+alias gitl='git log '
+alias gitm='git merge '
+alias gitp='git pull '
+alias gitr='git reset '
+alias gitrb='git rebase '
+alias gits='git status '
+
+### Dependency ###
+export PATH=$INSTALL/bin:$FILE_DIR/../bin:$PATH
+export INCLUDE=$INSTALL/include:$INCLUDE
+export C_INCLUDE_PATH=$INSTALL/include:$C_INCLUDE_PATH
+export CXX_INCLUDE_PATH=$INSTALL/include:$CXX_INCLUDE_PATH
+export LIBRARY_PATH=$INSTALL/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$INSTALL/lib:$LD_LIBRARY_PATH
+export CLASSPATH=$INSTALL/lib:$CLASSPATH
+
+### Default ###
+export EDITOR=emacs
+export CC=gcc
+export CXX=g++
+
+### setup ###
+eval "$(ssh-agent -s)"
+export HOMEBREW_PREFIX=/opt/homebrew
+
+unset FILE_DIR

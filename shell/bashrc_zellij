@@ -1,0 +1,86 @@
+show_zellij_title() {
+    if [[ -n "$ZELLIJ" ]]; then
+        local session="${ZELLIJ_SESSION_NAME:-zellij}"
+        printf '\033]2;[%s] %s\007' "$session" "$PWD"
+
+        if [[ -n "$ZELLIJ_SESSION_NAME" ]]; then
+            mkdir -p "$HOME/.cache/zellij-pwd"
+            printf '%s' "$PWD" > "$HOME/.cache/zellij-pwd/$ZELLIJ_SESSION_NAME"
+        fi
+    fi
+}
+
+za() {
+    local session="$1"
+    local file="$HOME/.cache/zellij-pwd/$session"
+
+    if [[ -f "$file" ]]; then
+        local pwd
+        pwd="$(cat "$file")"
+        printf '\033]2;[%s] %s\007' "$session" "$pwd"
+    else
+        printf '\033]2;[%s]\007' "$session"
+    fi
+
+    zellij attach "$session"
+}
+
+# __terminal_title_pwd() {
+#     printf '\033]0;%s\007' "$PWD"
+#     printf '\033]2;%s\007' "$PWD"
+# }
+
+# if [[ $- == *i* ]]; then
+#     __terminal_title_pwd
+
+#     if [ -n "$PROMPT_COMMAND" ]; then
+#         PROMPT_COMMAND="__terminal_title_pwd; $PROMPT_COMMAND"
+#     else
+#         PROMPT_COMMAND="__terminal_title_pwd"
+#     fi
+# fi
+
+# zellij() {
+#     __terminal_title_pwd
+#     command zellij "$@"
+# }
+
+# zellij() {
+#     local original_args=("$@")
+#     local title_session=
+
+#     if [ "$1" = "attach" ] || [ "$1" = "a" ]; then
+#         local arg skip_next=
+#         shift
+#         for arg in "$@"; do
+#             if [ -n "$skip_next" ]; then
+#                 skip_next=
+#                 continue
+#             fi
+
+#             case "$arg" in
+#                 --ca-cert|--index|--token)
+#                     skip_next=1
+#                     ;;
+#                 --ca-cert=*|--index=*|--token=*|-*)
+#                     ;;
+#                 *)
+#                     title_session=$arg
+#                     break
+#                     ;;
+#             esac
+#         done
+#     elif [ "$1" = "-s" ] || [ "$1" = "--session" ]; then
+#         title_session=$2
+#     elif [[ "$1" == --session=* ]]; then
+#         title_session=${1#--session=}
+#     fi
+
+#     if [ -n "$title_session" ]; then
+#         printf '\033]0;%s\007' "$title_session"
+#     fi
+
+#     command zellij "${original_args[@]}"
+# }
+
+PROMPT_COMMAND="show_zellij_title${PROMPT_COMMAND:+; $PROMPT_COMMAND}"

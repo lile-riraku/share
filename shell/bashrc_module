@@ -1,0 +1,24 @@
+### environment modules ###
+
+export MODULEPATH="$(dirname "${BASH_SOURCE[0]}")"/../environmental-modules/profile
+
+module() {
+    eval "$(modulecmd sh "$@")"
+}
+
+load_modules() {
+    local file_dir
+
+    file_path="$(realpath -- "${BASH_SOURCE[0]}")"
+
+	if command -v module >/dev/null 2>&1; then
+		echo ">>>>>> Loading modules ($file_path)"
+		# module unload jdk >/dev/null 2>&1 && module load apache-ant
+		# module unload jdk >/dev/null 2>&1 && module load apache-tomcat
+		# module unload jdk >/dev/null 2>&1 && module load gcc
+		# module unload jdk >/dev/null 2>&1 && module load jdk
+	fi
+}
+
+load_modules
+unset -f load_modules
