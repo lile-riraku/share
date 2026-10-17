@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+mkdir -p output
+for file in *.png; do sips --resampleWidth 1200 "$file" --out "output/$file"; done
