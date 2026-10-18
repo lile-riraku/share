@@ -83,4 +83,10 @@ za() {
 #     command zellij "${original_args[@]}"
 # }
 
-PROMPT_COMMAND="show_zellij_title${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+setup() {
+	PROMPT_COMMAND="show_zellij_title${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+}
+
+print_profile_path
+setup
+unset -f setup

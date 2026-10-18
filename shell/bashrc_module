@@ -7,18 +7,15 @@ module() {
 }
 
 load_modules() {
-    local file_dir
-
-    file_path="$(realpath -- "${BASH_SOURCE[0]}")"
-
 	if command -v module >/dev/null 2>&1; then
-		echo ">>>>>> Loading modules ($file_path)"
-		# module unload jdk >/dev/null 2>&1 && module load apache-ant
-		# module unload jdk >/dev/null 2>&1 && module load apache-tomcat
-		# module unload jdk >/dev/null 2>&1 && module load gcc
+		echo ">>>>>> Loading modules"
+		# module unload apache-ant >/dev/null 2>&1 && module load apache-ant
+		# module unload apache-tomcat >/dev/null 2>&1 && module load apache-tomcat
+		# module unload gcc >/dev/null 2>&1 && module load gcc
 		# module unload jdk >/dev/null 2>&1 && module load jdk
 	fi
 }
 
+print_profile_path
 load_modules
 unset -f load_modules

@@ -1,12 +1,17 @@
-source_bashrc_files() {
-    local file_dir
+print_profile_path() {
+	local file_path="$(realpath -- "${BASH_SOURCE[1]}")"
+	printf '%s\n' ">>>>>> Sourcing bash profile ($file_path)"
+}
 
-    file_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source_bashrc_files() {
+	local file_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
     source "$file_dir/bashrc_common"
     source "$file_dir/bashrc_module"
     source "$file_dir/bashrc_zellij"
 }
 
+print_profile_path
 source_bashrc_files
 unset -f source_bashrc_files
+unset -f print_profile_path
