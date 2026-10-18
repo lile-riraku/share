@@ -11,6 +11,10 @@ source_bashrc_files() {
     source "$file_dir/bashrc_zellij"
 }
 
+if [ -f /etc/bashrc ]; then
+	source /etc/bashrc
+fi
+
 print_profile_path
 source_bashrc_files
 unset -f source_bashrc_files
