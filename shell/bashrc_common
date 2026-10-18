@@ -30,7 +30,7 @@ setup() {
 	alias gits='git status '
 
 	### Dependency ###
-	export PATH=$INSTALL/bin:$file_dir/../bin:$PATH
+	export PATH=$INSTALL/bin:$file_dir/../bin:~/.local/bin:$PATH
 	export INCLUDE=$INSTALL/include:$INCLUDE
 	export C_INCLUDE_PATH=$INSTALL/include:$C_INCLUDE_PATH
 	export CXX_INCLUDE_PATH=$INSTALL/include:$CXX_INCLUDE_PATH
