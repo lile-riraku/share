@@ -7,13 +7,25 @@ module() {
 }
 
 load_modules() {
-	if command -v module >/dev/null 2>&1; then
-		echo ">>>>>> Loading modules"
-		# module unload apache-ant >/dev/null 2>&1 && module load apache-ant
-		# module unload apache-tomcat >/dev/null 2>&1 && module load apache-tomcat
-		# module unload gcc >/dev/null 2>&1 && module load gcc
-		# module unload jdk >/dev/null 2>&1 && module load jdk
+	if ! command -v module >/dev/null 2>&1; then
+		return
 	fi
+
+	local modules=(
+        apache-ant
+        apache-tomcat
+        gcc
+        jdk
+    )
+
+	printf '# Loading module %s\n' "${modules[@]}"
+
+	local module_name
+
+    for module_name in "${modules[@]}"; do
+        module unload "$module_name" >/dev/null 2>&1 || true
+        module load "$module_name"
+    done
 }
 
 print_profile_path
