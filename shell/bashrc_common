@@ -50,6 +50,8 @@ setup() {
 		eval "$(ssh-agent -s)" >/dev/null
 	fi
 	export HOMEBREW_PREFIX=/opt/homebrew
+
+	export REQUESTS_CA_BUNDLE=/opt/homebrew/etc/openssl@4/cert.pem
 }
 
 print_profile_path
