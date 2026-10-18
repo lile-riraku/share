@@ -44,7 +44,11 @@ setup() {
 	export CXX=g++
 
 	### setup ###
-	eval "$(ssh-agent -s)"
+	ssh-add -k > /dev/null 2>&1
+	local ssh_add_status=$?
+	if (( ssh_add_status == 2 )); then
+		eval "$(ssh-agent -s)" >/dev/null
+	fi
 	export HOMEBREW_PREFIX=/opt/homebrew
 }
 
