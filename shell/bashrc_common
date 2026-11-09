@@ -3,18 +3,14 @@ setup() {
 
 	### Prompt ###
 	PS1='[\h:\W] '
-
-	### Directory ###
-	export WORK=~
-	export SOFT=$WORK/soft
-	export INSTALL=$WORK/install
+	PROMPT_COMMAND="set_terminal_title${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 
 	### Alias ###
 	alias cdw='cd $WORK'
 	alias beep="osascript -e 'beep'"
-	alias ls='ls --color=auto'
-	alias ll='ls -l --color=auto'
-	alias grep='grep --color=auto'
+	alias ll='ls -l --color=always'
+	alias lh='ll -t | head -n '
+	alias grep='grep --color=always'
 	alias gita='git add '
 	alias gitb='git branch '
 	alias gitc='git checkout '
@@ -28,9 +24,17 @@ setup() {
 	alias gitr='git reset '
 	alias gitrb='git rebase '
 	alias gits='git status '
+	alias python='python3'
 
 	### Dependency ###
-	export PATH=$INSTALL/bin:$file_dir/../bin:~/.local/bin:$PATH
+	for bin_dir in "$HOME"/.local/bin*; do
+		[[ -d "$bin_dir" ]] || continue
+		case ":$PATH:" in
+			*":$bin_dir:"*) ;;
+			*) PATH="$bin_dir:$PATH" ;;
+		esac
+	done
+	unset bin_dir
 	export INCLUDE=$INSTALL/include:$INCLUDE
 	export C_INCLUDE_PATH=$INSTALL/include:$C_INCLUDE_PATH
 	export CXX_INCLUDE_PATH=$INSTALL/include:$CXX_INCLUDE_PATH
@@ -52,6 +56,20 @@ setup() {
 	export HOMEBREW_PREFIX=/opt/homebrew
 
 	export REQUESTS_CA_BUNDLE=/opt/homebrew/etc/openssl@4/cert.pem
+}
+
+set_terminal_title() {
+    local shell_name
+
+    if [[ -n "${ZSH_VERSION:-}" ]]; then
+        shell_name="zsh"
+    elif [[ -n "${BASH_VERSION:-}" ]]; then
+        shell_name="bash"
+    else
+        shell_name="${SHELL##*/}"
+    fi
+
+    printf '\033]0;%s\007' "$shell_name"
 }
 
 print_profile_path
