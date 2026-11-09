@@ -9,7 +9,7 @@ setup() {
 	alias cdw='cd $WORK'
 	alias beep="osascript -e 'beep'"
 	alias ll='ls -l --color=always'
-	alias lh='ll | head -n '
+	alias lh='ll -t | head -n '
 	alias grep='grep --color=always'
 	alias gita='git add '
 	alias gitb='git branch '
