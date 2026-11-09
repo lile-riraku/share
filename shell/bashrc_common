@@ -5,17 +5,12 @@ setup() {
 	PS1='[\h:\W] '
 	PROMPT_COMMAND="set_terminal_title${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 
-	### Directory ###
-	export WORK=~
-	export SOFT=$WORK/soft
-	export INSTALL=$WORK/install
-
 	### Alias ###
 	alias cdw='cd $WORK'
 	alias beep="osascript -e 'beep'"
-	alias ls='ls --color=auto'
-	alias ll='ls -l --color=auto'
-	alias grep='grep --color=auto'
+	alias ll='ls -l --color=always'
+	alias lh='ll | head -n '
+	alias grep='grep --color=always'
 	alias gita='git add '
 	alias gitb='git branch '
 	alias gitc='git checkout '
@@ -29,6 +24,7 @@ setup() {
 	alias gitr='git reset '
 	alias gitrb='git rebase '
 	alias gits='git status '
+	alias python='python3'
 
 	### Dependency ###
 	for bin_dir in "$HOME"/.local/bin*; do
