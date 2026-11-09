@@ -3,6 +3,7 @@ setup() {
 
 	### Prompt ###
 	PS1='[\h:\W] '
+	PROMPT_COMMAND="set_terminal_title${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 
 	### Directory ###
 	export WORK=~
@@ -50,6 +51,20 @@ setup() {
 		eval "$(ssh-agent -s)" >/dev/null
 	fi
 	export HOMEBREW_PREFIX=/opt/homebrew
+}
+
+set_terminal_title() {
+    local shell_name
+
+    if [[ -n "${ZSH_VERSION:-}" ]]; then
+        shell_name="zsh"
+    elif [[ -n "${BASH_VERSION:-}" ]]; then
+        shell_name="bash"
+    else
+        shell_name="${SHELL##*/}"
+    fi
+
+    printf '\033]0;%s\007' "$shell_name"
 }
 
 print_profile_path
