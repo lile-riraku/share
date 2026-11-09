@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+files=()
+for file in "$@"; do
+    files+=("$(realpath "$file")")
+done
+
+osascript \
+  -e 'on run argv' \
+  -e 'set file_list to {}' \
+  -e 'repeat with file_path in argv' \
+  -e 'set end of file_list to (POSIX file file_path as alias)' \
+  -e 'end repeat' \
+  -e 'set the clipboard to file_list' \
+  -e 'end run' \
+  "${files[@]}"
