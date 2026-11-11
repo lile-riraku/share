@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Usage:
+#   ./make-executable.sh <directory>
+#
+# Recursively adds executable permissions to all regular files,
+# including hidden files, under the specified directory.
+
+directory="${1:?Usage: $0 <directory>}"
+
+if [[ ! -d "$directory" ]]; then
+    echo "Not a directory: $directory" >&2
+    exit 1
+fi
+
+find "$directory" -type f -exec chmod +x {} +
