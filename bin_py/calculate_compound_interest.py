@@ -38,16 +38,16 @@ def main() -> None:
         description="Calculate compound growth, taxing positive interest each period.",
     )
     parser.add_argument(
-        "--interest-rate", type=parse_rate, required=True,
+        "--interest-rate", "-ir", type=parse_rate, required=True,
         help="Rate per period as a decimal; e.g. 0.005 means 0.5%%.",
     )
     parser.add_argument(
-        "--times", type=parse_times, nargs="+", required=True,
-        help="One or more non-negative integers to multiply, e.g. 15 12 5.",
+        "--tax-rate", "-tr", type=parse_tax_rate, default=Decimal("0.2"),
+        help="Tax on positive profits each period, from 0 to 1; default: 0.2 (20%%). E.g. 0.2 means 20%%.",
     )
     parser.add_argument(
-        "--tax-rate", type=parse_tax_rate, default=Decimal(0),
-        help="Tax on positive profits each period, from 0 to 1; default: 0. E.g. 0.2 means 20%%.",
+        "--times", "-t", type=parse_times, nargs="+", required=True,
+        help="One or more non-negative integers to multiply, e.g. 15 12 5.",
     )
     args = parser.parse_args()
     periods = prod(args.times)
